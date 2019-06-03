@@ -1,0 +1,152 @@
+.cabezera_{
+     border-collapse: collapse;
+  width: 100%;
+  border:none;
+  margin: 3px;
+}
+.cabezera_ tr{
+    margin: 2px;
+}
+.cabezera_ td {
+
+  
+  font-size: 12px;
+   background: #F9F9F9;
+}
+.cabezera_  .titulo{
+    font-weight: bold;
+}
+
+
+
+
+.list {
+    
+   border-collapse: collapse;
+  width: 100%;
+  border:none;
+ /* border-top: 1px solid #DDD;
+  border-left: 1px solid #DDD;*/
+}
+.list td {
+ 
+}
+
+/*fin*/
+.list thead td {
+  background-color: #EFEFEF;
+  padding: 0px 5px;
+  height: 20px;
+}
+.list thead tr td{
+    border-collapse: collapse;
+     border-top: 1px solid #DDD;
+  border-left: 1px solid #DDD;
+}
+.list thead th {
+    
+  color: #222;
+  font-weight: bold;
+  font-size: 12px;
+   border-bottom-color:  #2F2D2C;
+    border-top-color:  #2F2D2C;
+   border-bottom-width: 2px;
+    border-top-width: 2px;
+   border-style:  solid; }
+
+.td_head{
+  color: #222;
+  font-weight: bold;
+  font-size: 9px;
+}
+.list tbody a {
+  text-decoration: none;
+}
+
+.list tbody td {
+  vertical-align: middle;
+   padding: 0px 5px;
+   height: 18px;
+   font-size: 10px;
+   border-bottom-color:  #DDD;
+   border-bottom-width: 2px;
+   border-style:  dotted; }
+
+
+.list .leftz {
+  text-align: left;
+  padding: 4px;
+}
+.list .rightz {
+  text-align: right;
+  padding: 4px;
+}
+.list .centerz {
+  text-align: center;
+  padding: 4px;
+}
+
+
+
+
+
+
+.table_sin_borde {
+    
+   border-collapse: collapse;
+  width: 100%;
+  border:none;
+ /* border-top: 1px solid #DDD;
+  border-left: 1px solid #DDD;*/
+}
+.table_sin_borde td {
+ 
+}
+
+/*fin*/
+.table_sin_borde thead td {
+  background-color: #EFEFEF;
+  padding: 0px 5px;
+  height: 20px;
+}
+.table_sin_borde thead tr td{
+    border-collapse: collapse;
+     border-top: 1px solid #DDD;
+  border-left: 1px solid #DDD;
+}
+.table_sin_borde thead th {
+    
+  color: #222;
+  font-weight: bold;
+  font-size: 12px;
+   border-bottom-color:  #2F2D2C;
+    border-top-color:  #2F2D2C;
+   border-bottom-width: 2px;
+    border-top-width: 2px;
+   border-style:  solid; }
+
+
+.table_sin_borde tbody a {
+  text-decoration: none;
+}
+
+.table_sin_borde tbody td {
+  vertical-align: middle;
+   padding: 0px 5px;
+   height: 18px;
+   font-size: 10px;
+    }
+
+
+.table_sin_borde .leftz {
+  text-align: left;
+  padding: 4px;
+}
+.table_sin_borde .rightz {
+  text-align: right;
+  padding: 4px;
+}
+.table_sin_borde .centerz {
+  text-align: center;
+  padding: 4px;
+}
