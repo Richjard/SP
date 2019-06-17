@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta http-equiv="Content-Type" content="text/html; charset=gb18030">
-	<title>Login APP PATRIMONIO</title>
-	
-	
+<head>
+  <title>Login APP PATRIMONIO</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-  <link rel="stylesheet" href="http://busca3.com/patrimonio/assets/theme.css" type="text/css">
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-        
+<!--===============================================================================================-->  
+  <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+            <?php
+        echo '<!-- CSS -->';     
+        if(CSS) {
+         foreach(CSS as $global_css) {
+
+            echo "\n".'<link type="text/css" rel="stylesheet" href="'.base_url($global_css.'.css').'" />';
+           }
+         }
+        ?>    
           <script type="text/javascript">
              /*if (/MSIE d|Trident.*rv:/.test(navigator.userAgent)) {
                  document.write("<script src='https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js'><\/script>");
@@ -22,57 +28,170 @@
           }
         }
         ?>  
-    
+         <?php
+        echo '<!-- CSS -->';     
+        if($CSS) {
+         foreach($CSS as $c) {
+
+            echo "\n".'<link type="text/css" rel="stylesheet" href="'.base_url($c.'.css').'" />';
+           }
+         }
+
+       
+      
+        ?> 
 
 <!--===============================================================================================-->
 </head>
-        <nav class="navbar navbar-light">
-    <div class="container d-flex justify-content-center"> <a class="navbar-brand text-primary" href="#">
-        <b> SISTEMA DE PATRIMONIO - UNIVERSIDAD JOSE CARLOS MARIATEGUI</b>
-      </a> </div>
-  </nav>
-  <div class="py-5" style="background-image: url('https://static.pingendo.com/cover-stripes.svg'); background-position:left center; background-size: cover;">
-    <div class="container">
-      <div class="row">
-        <div class="p-5 col-lg-6">
-          <h1>SISPATRI 2.0</h1>
-          <p class="mb-3">Bienvenido</p>
-          <form action="<?= base_url('login/login/validate')?>" method="post">
-            <div class="form-group"> <input type="text" class="form-control" placeholder="Usuario" id="usuario" name="usuario"> </div>
-            <div class="form-group"> <input type="password" class="form-control" placeholder="Password" id="pass" name="pass"> <small class="form-text text-muted text-right">
-                <a href="#"> -- </a>
-              </small> </div> <button class="btn btn-primary" id="sliderightoutline"></button>
-          </form>
-        </div>
-        <div class="col-md-6"><img class="img-fluid d-block my-5" src="http://busca3.com/patrimonio/assets/logo_control_patrimonial.png" style=""></div>
+<body style="background-color: #666666;">
+  <input type="hidden" id="base_url" value="<?=base_url()?>">
+  <div id="toast_"></div>
+  <div class="limiter">
+    <div class="container-login100">
+                    
+      <div class="wrap-login100">
+        <div class="login100-more" style="background-image: url('<?=base_url("img/bg-01.jpg")?>')">
+        </div>     
+        <form class="login100-form validate-form" id="form_login" >
+                                    <i class="fas fa-building  fa-lg "> SP Sistema Patromio</i>
+                                     <br>
+                                      <br>
+          <span class="login100-form-title p-b-43">
+            Iniciar sesión
+          </span>
+                                    <br>
+          
+           <div class="row "> 
+                                            <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 label_form">
+                                                 <label>Usuario<label>
+                                            </div>
+                                            <div class="col-xs-8 col-sm-8 col-lg-8 col-md-8 validar">                 
+                                                    <div  class="e-input-in-wrap">
+                                                        <input type="text" id="usuario" name="usuario" >                               
+                                                    </div> 
+                                                    <div class="error"></div>
+                                            </div>                                               
+                                        </div>
+                                       <div class="row "> 
+                                            <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 label_form">
+                                                 <label>Contraseña<label>
+                                            </div>
+                                            <div class="col-xs-8 col-sm-8 col-lg-8 col-md-8 validar">                 
+                                                    <div  class="e-input-in-wrap">
+                                                        <input type="password" id="pass" name="pass" >                               
+                                                    </div> 
+                                                   <div class="error"></div> 
+                                            </div>                                               
+                                        </div>
+                                    <br>
+                                    <div class="container-login100-form-btn">
+             <span  id="ingresar"></span>
+          </div>
+        </form>
       </div>
     </div>
-  </div>
-  <div class="py-3">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <p class="mb-0">2018 SisPatri. Todos los Derechos Reservados.</p>
         </div>
-      </div>
-    </div>
-  </div>
-        
-    <script>
+    <script>      
+       var base_url = document.getElementById("base_url").value;
            progressButton = new ej.splitbuttons.ProgressButton({
-                content: 'Iniciar sesión', enableProgress: true, animationSettings: { effect: 'SlideRight' },
+                content: 'Iniciar sesión',duration:1, enableProgress: true, animationSettings: { effect: 'SlideRight' },
                 spinSettings: { position: 'Center' }, cssClass: 'e-outline e-primary'
             });
-            progressButton.appendTo('#sliderightoutline');
+            progressButton.appendTo('#ingresar');
+
+             document.getElementById('ingresar').onclick = function () { 
+               console.log("probando login");
+             }
+
+            //ValidarDatos(usuario,contraseña)
+            var options = {
+                /*customPlacement: function (inputElement, errorElement) {
+                    inputElement = inputElement.closest('.validar').querySelector('.error');
+                    inputElement.parentElement.appendChild(errorElement);
+                },*/
+                rules: {
+                    'usuario': {
+                        required: [true, 'Por favor Ingrese su usuario']
+                    },
+                    'pass': {
+                        required: [true, 'Por favor Ingrese su contraseña']
+                    }                        
+                }
+            };
+           var form_login = new ej.inputs.FormValidator('#form_login', options);
+
+           var toastObj = new ej.notifications.Toast({
+              title: 'Error!', 
+              content:  'Usuario o contraseña invalido.', 
+              cssClass: 'e-toast-danger',
+               icon: 'e-danger toast-icons',
+             /* title: 'Matt sent you a friend request',
+              content: 'You have a friend request yet to accept.',
+              icon: 'e-laura',*/
+              target: document.getElementById('form_login'),
+              position: { X: 'Right', Y: 'Top' },
+            /*  close: onclose,
+              beforeOpen: onBeforeOpen*/
+           });
+
+            var toasts = [               
+                { title: 'Éxito!', content: 'Iniciando sesion...', cssClass: 'e-toast-success', icon: 'e-success toast-icons' },
+              
+                { title: 'Error!', content:  'Usuario o contraseña invalido.', cssClass: 'e-toast-danger', icon: 'e-danger toast-icons' },
+            ]; 
+       
+           toastObj.appendTo('#toast_');
+         
+           document.getElementById('ingresar').onclick = function () { 
+            if (form_login.validate()) { 
+
+               var data = new FormData();
+              //Form data
+              var form_data = $('#form_login').serializeArray();
+              $.each(form_data, function (key, input) {
+                  data.append(input.name, input.value);
+              });            
+              //Custom data            
+              $.ajax({
+                 type: 'post',
+                 url: base_url+"login/login/validate",
+                 processData: false,
+                 contentType: false,
+                 data: data,
+                 beforeSend: function() {
+                 },
+                 success: function(json) {  
+                     if(json=="yes")
+                      {     
+                         toastObj.show(toasts[0]); 
+                         location.reload();         
+                      }
+                      else
+                      {
+                          
+                           toastObj.show(toasts[1]);
+                      }
+                 },
+                 error: function(resp) {
+                     alert(resp);
+                 }
+              });  
+            }
+          }
         </script>
             
-	  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	
+  
+  
 
-	
+  
+<?php
+  echo '<!-- CSS -->';     
+        if($JS_PROPIO_VIEW) {
+         foreach($JS_PROPIO_VIEW as $j) {
 
-
+           echo "\n".'<script type="text/javascript" language="javascript" src="'.base_url($j.'.js').'"></script>';
+           }
+         }
+         ?>
 </body>
 </html>

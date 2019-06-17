@@ -120,8 +120,6 @@ class Md{
                 //'campos_values_update'=>"EliminadoSis=1"
               );          
             $getResult = new Crud($params);  
-            echo "DDDDdd";
-            print_r($getResult->getRegisterResult());
             return $getResult->getRegisterResult();
            
     }

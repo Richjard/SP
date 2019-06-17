@@ -52,7 +52,7 @@ $ip_real = get_real_ip();*/
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/patrimonio/';
+$config['base_url'] = 'http://localhost/SP/';
 
 //$config['base_url'] = 'http://busca3.com/patrimonio/';
 //$config['base_url'] = 'http://190.117.221.45/patrimonio';

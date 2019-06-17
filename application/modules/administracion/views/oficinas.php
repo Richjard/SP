@@ -1,5 +1,4 @@
-<div class="row bien_form">
-            
+<div class="row bien_form">            
     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
         
     </div>
@@ -39,7 +38,7 @@
                 
             </div>
           
- </div>  
+        </div>  
     </div>
 </div>  
 

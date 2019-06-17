@@ -268,7 +268,9 @@ height:100%;
         color: #fff;
     }
     .e-dialog .e-dlg-header-content .e-dlg-header .e-avatar.template-image {
-        background-image: url(src/dialog/images/1.png);
+        
+        background-image: url(ico/questionmark_83826.png);
+
         vertical-align: middle;
         display: inline-block;
         width: 36px;
@@ -294,3 +296,15 @@ height:100%;
     .content-wrapper div.row{
         padding: 0.4px 0px;
     }
+
+    
+
+    .confirmacion_text_context {
+    font-size: 16px;
+    padding: 3%;
+    word-wrap: break-word;
+    border-radius: 6px;
+    text-align: justify;
+    font-style: initial;
+    display: block;
+}

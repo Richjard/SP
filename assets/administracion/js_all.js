@@ -14,18 +14,20 @@
     });
     toastObj.appendTo('#toast_type');
     var toasts = [
+
         { title: 'Warning!', content:  'Por favor seleccione un registro.', cssClass: 'e-toast-warning', icon: 'e-warning toast-icons' },
         { title: 'Success!', content: 'Se efectuo la operación con exito.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' },
         { title: 'Error!', content: 'Por favor seleccione un registro.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' },
         { title: 'Information!', content: 'Please read the comments carefully.', cssClass: 'e-toast-info', icon: 'e-info toast-icons' },
         { title: 'Warning!', content:  'Solo se puede editar un registro a la vez.', cssClass: 'e-toast-warning', icon: 'e-warning toast-icons' },
+        { title: 'Warning!', content:  'Usuario o contraseña invalido.', cssClass: 'e-toast-danger', icon: 'e-danger toast-icons' },
     ];   
     var editar_simpatizante = document.getElementById('editar_simpatizante');
     var nuevo_simpatizante = document.getElementById('nuevo_simpatizante');
     var successBtn = document.getElementById('success_Toast');
     var errorBtn = document.getElementById('error_Toast');    
     $(document).click(function(event) {
-          if (!$(event.target).closest( "#ge_" ).length && !$(event.target).closest( "#eliminar_" ).length && !$(event.target).closest( "#editar_" ).length && !$(event.target).closest( "#nuevo_" ).length &&  !$(event.target).closest( "#eliminar_director" ).length &&  !$(event.target).closest( "#eliminar_actor" ).length &&  !$(event.target).closest( "#eliminar_genero" ).length &&  !$(event.target).closest( "#nuevo_director" ).length && !$(event.target).closest( "#nuevo_actor" ).length && !$(event.target).closest( "#nuevo_genero" ).length && !$(event.target).closest( "#editar_actor" ).length && !$(event.target).closest( "#editar_director" ).length && !$(event.target).closest( "#editar_genero" ).length) {
+          if (!$(event.target).closest( "#desverificar_todos_" ).length && !$(event.target).closest( "#verificar_todos_" ).length && !$(event.target).closest( "#ge_" ).length && !$(event.target).closest( "#eliminar_" ).length && !$(event.target).closest( "#editar_" ).length && !$(event.target).closest( "#nuevo_" ).length &&  !$(event.target).closest( "#eliminar_director" ).length &&  !$(event.target).closest( "#eliminar_actor" ).length &&  !$(event.target).closest( "#eliminar_genero" ).length &&  !$(event.target).closest( "#nuevo_director" ).length && !$(event.target).closest( "#nuevo_actor" ).length && !$(event.target).closest( "#nuevo_genero" ).length && !$(event.target).closest( "#editar_actor" ).length && !$(event.target).closest( "#editar_director" ).length && !$(event.target).closest( "#editar_genero" ).length) {
              toastObj.hide('All');
               }
      });
@@ -82,6 +84,47 @@
             });  
         
         
+    }
+function ajax_content_ojete_div(url_form,contenedor,fun){//FUCION PARA MOSTRAR CONTENIDO EN LA VENTANA MODAL    
+       
+        console.log("contendor:  "+contenedor);
+        $.ajax({
+                type: 'post',
+                url: base_url+url_form,
+                cache: false,
+               // data: datos,
+                beforeSend: function() {
+                /*  var html = '<div class="help-block text-center"><br/><h1>Cargando...</h1></div>';
+                    $('#contenerdor_').empty().html(html);*/
+                },
+                success: function(html) {                   
+                   $(contenedor).empty().html("<br/>"+html);
+                    fun();
+                },
+                error: function(resp) {
+                    alert(resp);
+                }
+            });  
+        
+        
+    }
+      function ajax_show_div(url,contenedor){//FUCION PARA MOSTRAR CONTENIDO EN UN DIV 
+        $.ajax({
+                type: 'post',
+                url: base_url+url,
+                cache: false,
+               // data: datos,
+                beforeSend: function() {
+                    /*  var html = '<div class="help-block text-center"><br/><h1>Cargando...</h1></div>';
+                    $('#contenerdor_').empty().html(html);*/
+                },
+                success: function(html) {                   
+                    $(contenedor).empty().html(html);
+                },
+                error: function(resp) {
+                    alert(resp);
+                }
+            });   
     }
 //FIN FUNCIONES ALL
 

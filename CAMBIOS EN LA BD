@@ -1,0 +1,53 @@
+FALTABA AGREGAR REGISTROS A MOTIVO_DESPLANZAMIENTO
+
+
+CREATE TABLE IF NOT EXISTS `detalle_desplazamiento_de_bienes` (
+  `iddesplazamiento_bien` INT NOT NULL,
+  `idformato_registro_bien` INT(11) NOT NULL,
+  `last_update` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `EliminadoSis` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`iddesplazamiento_bien`, `idformato_registro_bien`),
+  INDEX `fk_detalle_desplazamiento_de_bienes_formato_registro_bien1_idx` (`idformato_registro_bien` ASC),
+  CONSTRAINT `fk_detalle_desplazamiento_de_bienes_desplazamiento_bien1`
+    FOREIGN KEY (`iddesplazamiento_bien`)
+    REFERENCES `desplazamiento_bien` (`iddesplazamiento_bien`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_detalle_desplazamiento_de_bienes_formato_registro_bien1`
+    FOREIGN KEY (`idformato_registro_bien`)
+    REFERENCES `formato_registro_bien` (`idformato_registro_bien`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `patrimonio`.`verificacion_existencial_bien`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `patrimonio`.`verificacion_existencial_bien` (
+  `idanio` INT NOT NULL,
+  `idformato_registro_bien` INT NOT NULL,
+  `idusuarios` INT NOT NULL,
+  `estado` CHAR(1) NULL,
+  `EliminadoSis` CHAR(1) NULL,
+  `last_update` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idanio`, `idformato_registro_bien`),
+  INDEX `fk_ve_bien_usuarios1_idx` (`idusuarios` ASC),
+  INDEX `fk_verificacion_existencial_bien_anio1_idx` (`idanio` ASC),
+  INDEX `fk_verificacion_existencial_bien_formato_registro_bien1_idx` (`idformato_registro_bien` ASC),
+  CONSTRAINT `fk_ve_bien_usuarios1`
+    FOREIGN KEY (`idusuarios`)
+    REFERENCES `patrimonio`.`usuarios` (`idusuarios`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_verificacion_existencial_bien_anio1`
+    FOREIGN KEY (`idanio`)
+    REFERENCES `patrimonio`.`anio` (`idanio`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_verificacion_existencial_bien_formato_registro_bien1`
+    FOREIGN KEY (`idformato_registro_bien`)
+    REFERENCES `patrimonio`.`formato_registro_bien` (`idformato_registro_bien`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

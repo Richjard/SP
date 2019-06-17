@@ -3,6 +3,7 @@ include_once ("Crud.php");
 include_once ("Locales.php");
 /*include ("areas.php");*/
 include_once ("Oficinas.php");
+include_once ("Verificacion_de_bienes.php");
 require 'vendor/autoload.php';
 
 //use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -93,10 +94,13 @@ class Bien{
     private $dtc_placaSerie="";
     
     private $reg_total="";
-    
-    public function __construct($id="",$param=array())
+
+    private $idusuario="";
+        
+    public function __construct($id="",$param=array(),$idusuario="")
     {      
         
+        $this->idusuario=$idusuario;
          if(isset($param['skip'])){
           if(isset($param['filtro'])){
              $params = array(
@@ -155,7 +159,7 @@ class Bien{
         return $this->registros;
        
     }
-    public function get_registros_despla_oficina($id_ofi=""){
+    public function get_registros_filtro_por_oficina($id_ofi=""){
         $params = array(
                 'tabla' =>$this->vista,  
                 "filtro"=>"idoficina='".$id_ofi."'"    
@@ -277,7 +281,7 @@ class Bien{
      public function guardar_en_bd($data_request = array()){  
          for($i=1;$i<=$this->cantidad;$i++){
               $new_codigo = $this->codigo_interno.str_pad($this->obtener_ultimo_codigo(), 4, "0", STR_PAD_LEFT); 
-           $idusuarios=1;
+       
            $params= array(
                 "tabla"=>$this->tabla,              
                 'campos' => "codigo_interno,descripcion,".$this->id_bien_mm_campo.",tipo_bien,idforma_adquisicion,fecha_adquisicion,orden_compra,factura,pecosa,guia_remision,idestado_bien,idoficina,idanio,valor_adquirido,valor_neto,asegurado,dt_marca,dt_modelo,dt_tipo,dt_color,dt_serie,dt_otros,dtc_discoDuro,dtc_discoDuroMarca,dtc_discoDuroSerie,dtc_procesador,dtc_procesadorMarca,dtc_procesadorSerie,dtc_memoriaRam,dtc_memoriaRamMarca,dtc_memoriaRamSerie,dtc_placa,dtc_placaMarca,dtc_placaSerie,resolucion_baja,fecha_baja,causal,codigo,idplan_contable,idproveedor,idempleado_oficina,idusuarios",
@@ -322,7 +326,7 @@ class Bien{
                           .$this->idplan_contable.','
                           .$this->idproveedor.','
                           .$this->idempleado_oficina.',"'
-                          .$idusuarios.'"'                
+                          .$this->idusuario.'"'                
             );
             $insert = new Crud($params);
             $id_new = $insert->insert();  
@@ -579,24 +583,24 @@ class Bienes extends MX_Controller
     }
    
  }
-public function leerRegistro() {        
+public function leerRegistro($id_oficina="") {        
       if($_SERVER['REQUEST_METHOD']=="GET"){  
             $parameters = $this->input->get();//RECIBIMOS 3 PARAMETROS DE LA GRILLA            
-            $paginas    = $parameters['$inlinecount'];//PARAMETRO PARA MOSTRAR TODAS LAS PAGINAS
-           
-            
-            
+            $paginas    = $parameters['$inlinecount'];//PARAMETRO PARA MOSTRAR TODAS LAS PAGINAS              
             if (!empty($parameters['$skip'])) { // <= false
- $skip       = $parameters['$skip'];//PARAMETRO PARA MOSTRAR DESDE DODNE MOSTRAR LOS REGISTROS
-    // No está vacía (true)
+             $skip       = $parameters['$skip'];//PARAMETRO PARA MOSTRAR DESDE DODNE MOSTRAR LOS REGISTROS
+                // No está vacía (true)
 
-} else {
- $skip       = 0;//PARAMETRO PARA MOSTRAR DESDE DODNE MOSTRAR LOS REGISTROS
-    // Está vacía (false)
-}
-            $top        = $parameters['$top'];//PARAMETRO PARA MOSTRAR HASTA DQUE REGISTRO  EN MYSQL LIMIT  0, 12            
-            if(isset($parameters['$filter'])){  
-                
+            } else {
+             $skip       = 0;//PARAMETRO PARA MOSTRAR DESDE DODNE MOSTRAR LOS REGISTROS
+                // Está vacía (false)
+            }
+
+
+            $top        = $parameters['$top'];//PARAMETRO PARA MOSTRAR HASTA DQUE REGISTRO  EN MYSQL LIMIT  0, 12   
+            if(!empty($id_oficina)) {
+               $filtro_oficina="  idoficina=$id_oficina  "; 
+                if(isset($parameters['$filter'])){    
                 $i=str_replace("(startswith(tolower("," ",$parameters['$filter']);
                 $i=str_replace("),'"," LIKE '%",$i);
                 $i=str_replace("'))","%' ",$i);  
@@ -606,34 +610,81 @@ public function leerRegistro() {
                 $i=str_replace("AND (idgrupos eq null)"," ",$i);
                 $i=str_replace("(idgrupos eq null)"," EliminadoSis is null",$i);
                 $i=str_replace("AND (idClases eq null)"," ",$i);
-                $i=str_replace("(idClases eq null)"," EliminadoSis is null",$i);
-                
-                 
+                $i=str_replace("(idClases eq null)"," EliminadoSis is null",$i);  
+
                 $param=array(//ARMAMOS EL ARRAY PARAMETROS PARA ARMAR LA CONSULTA EN EL MODEL                    
                     "skip"=>$skip,//EMPEZAR AMOSTRAR REGISTROS  DESDE 
                     "top"=>$top, //HASTA 
                     //"filtro"=>"codigo LIKE '%{$parametro_busqueda[0]}%'" 
-                    "filtro"=>"$i",
+                    "filtro"=>"$i AND $filtro_oficina",
                     "order"=>"idformato_registro_bien  DESC"
                   );
+                }else{
+
+                    $param=array(            
+                        "skip"=>$skip,//EMPEZAR AMOSTRAR REGISTROS  DESDE 
+                        "top"=>$top, //HASTA 
+                        "order"=>"idformato_registro_bien  DESC",
+                        "filtro"=>"$filtro_oficina",
+                        //"order"=>"dtFechaSis  DESC"
+                     );
+                }   
+
             }else{
-                $param=array(            
+
+               if(isset($parameters['$filter'])){                           
+                $i=str_replace("(startswith(tolower("," ",$parameters['$filter']);
+                $i=str_replace("),'"," LIKE '%",$i);
+                $i=str_replace("'))","%' ",$i);  
+                $i= str_replace("(tolower("," ",$i); 
+                $i=str_replace(") eq '"," = '",$i);
+                $i=str_replace("')","' ",$i);
+                $i=str_replace("AND (idgrupos eq null)"," ",$i);
+                $i=str_replace("(idgrupos eq null)"," EliminadoSis is null",$i);
+                $i=str_replace("AND (idClases eq null)"," ",$i);
+                $i=str_replace("(idClases eq null)"," EliminadoSis is null",$i);  
+
+                $param=array(//ARMAMOS EL ARRAY PARAMETROS PARA ARMAR LA CONSULTA EN EL MODEL                    
                     "skip"=>$skip,//EMPEZAR AMOSTRAR REGISTROS  DESDE 
                     "top"=>$top, //HASTA 
+                    //"filtro"=>"codigo LIKE '%{$parametro_busqueda[0]}%'" 
+                    "filtro"=>$i,
                     "order"=>"idformato_registro_bien  DESC"
-                    //"order"=>"dtFechaSis  DESC"
-                 );
-            }   
+                  );
+                }else{
+
+                    $param=array(            
+                        "skip"=>$skip,//EMPEZAR AMOSTRAR REGISTROS  DESDE 
+                        "top"=>$top, //HASTA 
+                        "order"=>"idformato_registro_bien  DESC",                 
+                        //"order"=>"dtFechaSis  DESC"
+                     );
+                }   
+              
+            }         
+            
             
             $data = new Bien("",$param);
             $registros=$data->get_registros();            
             $total=$data->get_total();//$this->ma->getTotal($data_model);//OBTENEMOS EL TOTAL DE REGISTROS
             $datos['data']=array();
             if($registros){
-                foreach ($registros as $reg) {   //ARMAMOS EL ARRAY PARA MOSTRAR EN LA GRILLA                                
+                foreach ($registros as $reg) {   //ARMAMOS EL ARRAY PARA MOSTRAR EN LA GRILLA      
+
+                //verificamos si esta verificado
+                    $param=array();
+                    $data = new Veb($reg->idformato_registro_bien,2019,"",$param,$this->session->userdata('idusuario'));
+                    $estado=$data->get_estado();
+                    $estado_="check_ok_accept_apply_1582.png";
+                    if($estado=="F"){
+                      $estado_="minusflat_105990.png";
+                    }
+                    
+                //fin                          
                   $datos['data'][]=array(
                       'idformato_registro_bien'=>$reg->idformato_registro_bien,
                       'codigo_interno'=>$reg->codigo_interno,
+                      'estado'=>$estado_,
                       'descripcion'=>$reg->descripcion,
                       'fecha_adquisicion'=>$reg->fecha_adquisicion,
                       'local'=>$reg->local,
@@ -646,8 +697,8 @@ public function leerRegistro() {
                       'dt_serie'=>$reg->dt_serie,
                       'dt_color'=>$reg->dt_color,
                       'dt_otros'=>$reg->dt_otros,
-                       'factura'=>$reg->factura,  
-                     'codigo_cuenta'=>$reg->codigo_cuenta,  
+                      'factura'=>$reg->factura,  
+                      'codigo_cuenta'=>$reg->codigo_cuenta,  
                       'valor_adquirido'=>$reg->valor_adquirido,
                       'valor_neto'=>$reg->valor_neto,
                       'orden_compra'=>$reg->orden_compra,
@@ -671,7 +722,7 @@ public function leerRegistro() {
             }
             //echo "idoficina".$idoficina;
             if($idoficina!="no"){              
-                $registros=$data->get_registros_despla_oficina($idoficina); 
+                $registros=$data->get_registros_filtro_por_oficina($idoficina); 
             }
             
             $datos['data']=array();
@@ -791,7 +842,7 @@ public function datos_json(){
       
    }   
  public function guardar() {      
-    $bien = new Bien("","");
+    $bien = new Bien("","",$this->session->userdata('idusuario'));
     $bien->set_row($_REQUEST);
      if($_REQUEST['id_bien_crud']=="autogenerado"){
         $bien->guardar_en_bd();     

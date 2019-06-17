@@ -126,8 +126,7 @@
         rowSelected: rowSelected_bien,
        
 
-            enableHover: false,
-            
+        enableHover: false,            
         allowExcelExport: true,
         allowPdfExport: true,
         rowHeight: 20,
@@ -148,7 +147,7 @@
         
         toolbar: [           
             { text: 'Nuevo', tooltipText: 'Agregar nuevo bien',  prefixIcon: 'e-add', id: 'nuevo_' }, 
-            { text: 'Modificar', tooltipText: 'Modificar datos', prefixIcon: 'e-edit', id: 'editar_'   },
+            { text: 'Modificar', tooltipText: 'Modificar datos', prefixIcon: 'e-edit', id: 'editar_' },
             { text: 'Eliminar', tooltipText: 'Eliminar bien', prefixIcon: 'e-delete', id: 'eliminar_' },
             { text: 'Generar Etiquetas', tooltipText: 'Generar Etiquetas', prefixIcon: 'e-csvexport', id: 'ge_' },
             { text: 'Generar EXCEL', tooltipText: 'Generar EXCEL', prefixIcon: 'e-excelexport', id: 'Grid_excelexport' }
@@ -167,6 +166,8 @@
        // contextMenuClick: clickHandler,
    columns: [   
             { type: 'checkbox', width: 50 },
+
+            {headerText: 'VB', textAlign: 'Center',template: '#template', width: 50,filter:false},
             {
                 field: 'idformato_registro_bien', isPrimaryKey: true, headerText: 'ID', textAlign: 'Right',
                 validationRules: { required: true }, width: 120
@@ -329,7 +330,7 @@
    
    
    
-      var confirmDialogObj_eliminar_bien = new ej.popups.Dialog({//ventan de confirmacion de eliminacion para actores
+    var confirmDialogObj_eliminar_bien = new ej.popups.Dialog({//ventan de confirmacion de eliminacion para actores
         header: 'Eliminar registro',
         visible: false,
         content: confirmContent,

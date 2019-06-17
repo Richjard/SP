@@ -92,6 +92,10 @@ var menuTemplate = '<ul id="menu"></ul>';
                     { 
                         text: 'DESPLAZATAMIENTO DE BIENES', 
                         url:base_url+"administracion/desplazamiento_de_bienes",
+                    },
+                    { 
+                        text: 'VERIFICACION EXISTENCIAL DE BIENES', 
+                        url:base_url+"administracion/verificacion_de_bienes",
                     }
                 ]
             },

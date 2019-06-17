@@ -68,6 +68,7 @@ class Login extends MX_Controller
         $datos['CSS'] = array(
             'assets/login/main'
         );
+        $datos['JS_PROPIO_VIEW']    =array();
 
         $this->load->view('login/login', $datos);
         /*
@@ -86,13 +87,20 @@ class Login extends MX_Controller
            $user= $parameters['usuario'];
            $pass= $parameters['pass'];           
            $user_login = new User($user,$pass);
-          // echo $user_login->get_pin();
-           
+           $return="not";           
            if($user_login->login()==true){
+               $return="yes";
+           }
+          
+           header("Content-type: application/json");
+          echo  json_encode($return); 
+
+          // echo $user_login->get_pin();           
+           /*if($user_login->login()==true){
                redirect(base_url('administracion/principal'));
            }else{
                redirect(base_url());
-           }
+           }*/
     }
     public  function salir(){
           $user_login = new User(0,0);
