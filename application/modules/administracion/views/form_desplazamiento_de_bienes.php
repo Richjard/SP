@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-xs-3 col-sm-3 col-lg-3 col-md-3">                   
                             <div  class="e-input-in-wrap fv">
-                                <input type="text" id="anio_des" name="anio_des" value="2018"> 
+                                <input type="text" id="anio_des" name="anio_des" value="<?=$this->session->userdata('anio')?>" disabled="disabled"> 
                                  <div class="error"></div>
                             </div>  
 

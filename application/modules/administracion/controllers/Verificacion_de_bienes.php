@@ -176,13 +176,13 @@ public function index() { //escogjer ubicacion hay q epasularlo verificacion_bie
  }
  public function verificar_todos($idOficina=""){
   $data = $this->input->post('data'); 
-  $this->marcar_desmarcar($idOficina,2019,"T",$data);
+  $this->marcar_desmarcar($idOficina,$this->session->userdata('anio'),"T",$data);
 
   
  }
  public function desverificar_todos($idOficina=""){
     $data = $this->input->post('data'); 
-  $this->marcar_desmarcar($idOficina,2019,"F",$data);
+  $this->marcar_desmarcar($idOficina,$this->session->userdata('anio'),"F",$data);
  }
 
  private function marcar_desmarcar($idOficina,$anio,$estado,$data){//verificar

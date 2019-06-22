@@ -4,7 +4,7 @@ include_once ("Locales.php");
 /*include ("areas.php");*/
 include_once ("Oficinas.php");
 include_once ("Verificacion_de_bienes.php");
-require 'vendor/autoload.php';
+require APPPATH .'vendor/autoload.php';
 
 //use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -22,6 +22,17 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Protection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+
+
+
+
+
+
+              # 4 generadores
+use Picqer\Barcode\BarcodeGeneratorHTML;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use Picqer\Barcode\BarcodeGeneratorJPG;
+use Picqer\Barcode\BarcodeGeneratorSVG;
 
 class Bien{   
 
@@ -97,9 +108,9 @@ class Bien{
 
     private $idusuario="";
         
-    public function __construct($id="",$param=array(),$idusuario="")
+    public function __construct($id="",$param=array(),$idusuario="",$anio="")
     {      
-        
+        $this->anio=$anio;
         $this->idusuario=$idusuario;
          if(isset($param['skip'])){
           if(isset($param['filtro'])){
@@ -184,7 +195,8 @@ class Bien{
        
     }
     public function set_row($data_request = array()){  
-        $this->anio=date("Y");
+        //$this->anio=date("Y");
+        //$this->anio=
         $this->idformato_registro_bien=$data_request['id_bien_crud'];
         $this->codigo_interno=substr($data_request['codigo_bien'], 0, 8);
         $this->descripcion=$data_request['nombre_bien'];
@@ -456,8 +468,9 @@ class Bien{
                             $i4=$ii+5;
                             $c1111=$letra.$i4; 
                             $i5=$ii+6;
-                            $c11111=$letra.$i5;   
+                            $c11111=$letra.$i5;   //codigo_barra
                             $spreadsheet->getActiveSheet()->setCellValue($c1, "LOCAL" );
+                           // $spreadsheet->getActiveSheet()->setCellValue($c1, $this->codigo_barra() );
                             $spreadsheet->getActiveSheet()->setCellValue($c11, "AREA" );  
                             $spreadsheet->getActiveSheet()->setCellValue($c111, "OFICINA" );
                             $spreadsheet->getActiveSheet()->setCellValue($c1111, "CODIGO" );
@@ -541,19 +554,58 @@ class Bien{
     }
             
     public function genera_etiqueta_pdf($c=""){
-             $params = array(
+          
+              $params = array(
                 'tabla' =>$this->vista,                 
                 "filtro"=>"idformato_registro_bien in(".$c.")",
                 'order'=>"idformato_registro_bien"
               ); 
              $getResult = new Crud($params);     
             $registros=$getResult->getRegisterResult();
-
-            print_r($registros);
-            
-             
+            return $registros;
        
     }    
+
+
+    public function codigo_barra(){
+
+      
+
+           # Crear generador
+            $generador = new BarcodeGeneratorPNG();
+            # Ajustes
+            $texto = "parzibyte.me";
+            $tipo = $generador::TYPE_CODE_128;
+            $imagen = $generador->getBarcode($texto, $tipo);
+            # Encabezado para que el navegador sepa que es una imagen
+            //header("Content-type: image/png");
+            # Hora de imprimir*/
+            echo $imagen;
+
+
+
+                      # Crear generador
+         /* $generador = new BarcodeGeneratorPNG();
+          # Ajustes
+          $texto = "parzibyte.me";
+          $tipo = $generador::TYPE_CODE_128;
+          $imagen = $generador->getBarcode($texto, $tipo);
+          # Aquí se guarda la imagen
+          $nombreArchivo = "codigo.png";
+          # Escribir los datos
+          $bytesEscritos = file_put_contents($nombreArchivo, $imagen);
+          # Comprobar si todo fue bien
+          if ($bytesEscritos !== false) {
+              echo "Correcto. Se escribieron $bytesEscritos bytes en $nombreArchivo";
+
+              header("Content-type: image/png");
+
+              echo $bytesEscritos;
+          } else {
+              echo "Error guardando código de barras";*/
+
+
+    }
     
     
 }
@@ -673,7 +725,7 @@ public function leerRegistro($id_oficina="") {
 
                 //verificamos si esta verificado
                     $param=array();
-                    $data = new Veb($reg->idformato_registro_bien,2019,"",$param,$this->session->userdata('idusuario'));
+                    $data = new Veb($reg->idformato_registro_bien,$this->session->userdata('anio'),"",$param,$this->session->userdata('idusuario'));
                     $estado=$data->get_estado();
                     $estado_="check_ok_accept_apply_1582.png";
                     if($estado=="F"){
@@ -842,7 +894,7 @@ public function datos_json(){
       
    }   
  public function guardar() {      
-    $bien = new Bien("","",$this->session->userdata('idusuario'));
+    $bien = new Bien("","",$this->session->userdata('idusuario'),$this->session->userdata('anio'));
     $bien->set_row($_REQUEST);
      if($_REQUEST['id_bien_crud']=="autogenerado"){
         $bien->guardar_en_bd();     
@@ -881,13 +933,91 @@ public function eliminar($id="") {
      
  }
  public function gene_x(){
-    // echo ":OOO".;
-     $ge = new Bien("","");
+   
+   
+
+     $ge = new Bien("",""); 
     
      $ge->genera_etiqueta($this->session->flashdata('data'));
+
+
+ }
+ public function temp_generar_etiquetas_pdf(){
+   $data = $this->input->post('data'); 
+     // print_r($data);
+      $c="";
+      $i=1;
+      $t=count($data);
+      if($data){
+        foreach ($data as $d){
+         // echo $d["idformato_registro_bien"];
+            if($t==$i){
+                $c=$c.$d["idformato_registro_bien"]; 
+            }else{
+                $c=$c.$d["idformato_registro_bien"].",";
+            }
+          
+          $i++;
+        }  
+      }//id in(90,100,150)*/
+    $this->session->set_flashdata('data', $c);
+
+ }
+ public function gene_pdf(){
+
+ $ge = new Bien("","");     
+ $datos['bienes']=$ge->genera_etiqueta_pdf($this->session->flashdata('data'));
+
+
+
+  # Crear generador
+           /* $generador = new BarcodeGeneratorPNG();
+            # Ajustes
+            $texto = "parzibyte.me";
+            $tipo = $generador::TYPE_CODE_128;
+            $imagen = $generador->getBarcode($texto, $tipo);
+             $datos['imagen']=$imagen;*/
+            # Encabezado para que el navegador sepa que es una imagen
+            //header("Content-type: image/png");
+            # Hora de imprimir*/
+      //echo $imagen;
+
+      // $this->load->view("administracion/report/etiqueta",$datos);
+          
+
+
+             ini_set("pcre.backtrack_limit", "50000000");
+
+
+     
+
+         /*  header("Content-type: image/png");
+   echo $imagen;*/
+        
+      $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-L','setAutoTopMargin' => "stretch"]);
+    //  $mpdf = new \Mpdf\Mpdf('c','A4','','' , 0 , 0 , 0 , 0 , 0 , 0); 
+        $html = $this->load->view('report/etiqueta',$datos,true);       
+        
+    
+
+
+                $stylesheet =  file_get_contents(base_url('assets/administracion/etiqueta.css'));
+               // $mpdf->SetDisplayMode('fullpage');
+               // $mpdf->list_indent_first_level = 0;  // 1 or 0 - whether to indent the first level of a list
+                $mpdf->WriteHTML($stylesheet,1);
+                $mpdf->WriteHTML($html,2);
+                $mpdf->Output(); // opens in browser*/
+            
+
+
+
+
+
+     
  }
 
- public function re(){   
+
+  public function re(){   
       ini_set("pcre.backtrack_limit", "50000000");
             $param=array(            
                    

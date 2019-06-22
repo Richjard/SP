@@ -6,10 +6,12 @@ if (! defined('BASEPATH'))
 class User{
     private $usuario; // numero de la tarjeta
     private $pass; // pin de la tarjeta
-    public function __construct($usuario,$pass)
+    private $anio;//PARA LOS PERIODOS
+    public function __construct($usuario,$pass,$anio)
     {
         $this->usuario=$usuario;
         $this->pass=$pass;
+        $this->anio=$anio;
          $this->CI =& get_instance();
     }
     //metodos
@@ -33,6 +35,7 @@ class User{
         $this->CI->session->set_userdata(array(
             'Usuario' => $Q->nombres.", ".$Q->apellidos,
             'idusuario' => $Q->idusuarios,
+            'anio'=>$this->anio,
             //'status' => $Q->status,
             'logged_in' => true
         ));
@@ -60,7 +63,7 @@ class Login extends MX_Controller
 
     public function index()//index es igual que decir main
     {
- if($this->session->userdata('logged_in')==FALSE){
+        if($this->session->userdata('logged_in')==FALSE){
         // if($this->session->userdata('logged')==TRUE){
         //$datos['contenido'] = 'login/login';
         $datos['app_url'] = base_url();
@@ -69,7 +72,14 @@ class Login extends MX_Controller
             'assets/login/main'
         );
         $datos['JS_PROPIO_VIEW']    =array();
+        //recuperampos los años
 
+         $data_model=array(
+              "tabla"=>"anio",
+              "order"=>"idanio DESC "
+            );
+        $datos["anios"] = $this->ma->getRegisterResult($data_model);
+          
         $this->load->view('login/login', $datos);
         /*
          * }else{
@@ -77,16 +87,17 @@ class Login extends MX_Controller
          * redirect(base_url('login/autenteficacion'), 'refresh');
          * }
          */
-    } else {
-         redirect(base_url('administracion/principal'));
-    }
+        } else {
+             redirect(base_url('administracion/principal'));
+        }
     }
     //mentods getter
     public function validate(){
             $parameters = $this->input->post();              
            $user= $parameters['usuario'];
-           $pass= $parameters['pass'];           
-           $user_login = new User($user,$pass);
+           $pass= $parameters['pass'];   
+           $anio= $parameters['anio'];          
+           $user_login = new User($user,$pass,$anio);
            $return="not";           
            if($user_login->login()==true){
                $return="yes";
@@ -103,7 +114,7 @@ class Login extends MX_Controller
            }*/
     }
     public  function salir(){
-          $user_login = new User(0,0);
+          $user_login = new User(0,0,0);
           $user_login->log_out();
          redirect(base_url());
     }

@@ -1,5 +1,5 @@
 <input type="hidden" id="base_url" value="<?=base_url()?>">
-<input type="hidden" id="user__" value="<?=$this->session->userdata('Usuario')?>">
+<input type="hidden" id="user__" value="<?=$this->session->userdata('Usuario').'[Periodo : '.$this->session->userdata('anio').']'?>">
 <div id="dialogObj_reportes"></div>
 <div id="dialogObj_reportes_modal"></div>
 <!--<ul id="menu">

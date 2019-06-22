@@ -5,7 +5,7 @@ include_once ("Oficinas.php");
 include_once ("Empleados_as_oficina.php");
 include_once ("Desplazamiento_de_bienes.php");
 include_once ("Detalle_desplazamiento_de_bienes.php");
-require 'vendor/autoload.php';
+require APPPATH .'vendor/autoload.php';
 class Area{   
 
     private $registros;//array tipo result

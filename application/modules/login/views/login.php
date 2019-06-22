@@ -81,7 +81,33 @@
                                                         <input type="password" id="pass" name="pass" >                               
                                                     </div> 
                                                    <div class="error"></div> 
-                                            </div>                                               
+                                            </div>
+                                        </div>
+
+
+                                         <div class="row "> 
+                                            <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 label_form">
+                                                 <label>Seleccione un Año<label>
+                                            </div>         
+                                              <div class="col-xs-8 col-sm-8 col-lg-8 col-md-8 validar">                 
+                                                    <div  class="e-input-in-wrap">
+                                                      <select id="anio"> 
+                                                        <?php
+                                                        if($anios){
+                                                          foreach ($anios as $a) {
+                                                           echo '<option value="'.$a->idanio.'">'.$a->idanio.'</option>';
+                                                          }
+                                                        }
+
+                                                        ?>
+                                                           
+                                                        </select>   
+
+                                                    </div> 
+                                                   <div class="error"></div> 
+                                            </div>
+
+
                                         </div>
                                     <br>
                                     <div class="container-login100-form-btn">
@@ -141,7 +167,20 @@
             ]; 
        
            toastObj.appendTo('#toast_');
-         
+
+            var listObj = new ej.dropdowns.DropDownList({
+              // set the index value to select an item based on index at initial rendering
+              //index: 2,
+              width:'153px',
+              // set the placeholder to DropDownList input element
+              placeholder: 'Select a game',
+              // set the height of the popup element
+              popupHeight: '100px',
+              // bind the change event
+              change: function () { valueChange(); }
+          });
+          listObj.appendTo('#anio');
+
            document.getElementById('ingresar').onclick = function () { 
             if (form_login.validate()) { 
 

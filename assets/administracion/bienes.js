@@ -118,6 +118,34 @@
 
             // document.location.href = base_url+"administracion/bienes/ge/miArray="+dd;
          }
+         
+         if (args.item.id === "gecb_") {
+            var dd=grid_bienes.getSelectedRecords();  
+             if(dd.length==0){
+                  toastObj.show(toasts[0]);
+             }else{
+                  $.ajax({
+                       type: 'post',
+                       url: base_url+"administracion/bienes/temp_generar_etiquetas_pdf",
+                       data: {"data" : dd},
+                       beforeSend: function() {
+                        //$("#ok_por_local").attr("disabled",true); 
+                      },                                   
+                       success: function(json) {                                                                  
+                      //  $("#ok_por_local").attr("disabled",false); 
+                        dialogObj_reportes.show();//MOSTRAMOS LA VENTANA MODAL PARA REGISTRAR NUEVO DIRECOTOR                            
+                        dialogObj_reportes.setProperties ({content: '<iframe width="100%" height="900" src="'+base_url+"administracion/bienes/gene_pdf"+'"></iframe>'});                         
+
+                       },
+                       error: function(resp) {
+                           alert(resp);
+                       }
+                    }); 
+             }
+
+                
+
+         }
         
     };  
      $("#editar_").addClass( "disabled_patrimonio_b");
@@ -140,7 +168,7 @@
        
         pageSettings: { 
             pageCount: 10,
-            pageSize: 40,
+            pageSize: 60,
             pageSizes:true
         },
         //toolbar: ['ExcelExport', 'PdfExport'],
@@ -150,6 +178,7 @@
             { text: 'Modificar', tooltipText: 'Modificar datos', prefixIcon: 'e-edit', id: 'editar_' },
             { text: 'Eliminar', tooltipText: 'Eliminar bien', prefixIcon: 'e-delete', id: 'eliminar_' },
             { text: 'Generar Etiquetas', tooltipText: 'Generar Etiquetas', prefixIcon: 'e-csvexport', id: 'ge_' },
+             { text: 'Generar Etiquetas con CB', tooltipText: 'Generar Etiquetas con CB', prefixIcon: 'fas fa-barcode', id: 'gecb_' },
             { text: 'Generar EXCEL', tooltipText: 'Generar EXCEL', prefixIcon: 'e-excelexport', id: 'Grid_excelexport' }
            // { text: 'Generar PDF', tooltipText: 'Generar PDF', prefixIcon: 'e-pdfexport', id: 'Grid_pdfexport' }
 
